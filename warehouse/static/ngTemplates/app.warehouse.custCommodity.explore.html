@@ -1,0 +1,176 @@
+<div class="container-fluid" ng-controller="businessManagement.warehouse.custCommodity.explore" style="padding-top:10px;">
+  <div class="col-md-12" style="min-height:70vh;border-right:solid 2px #eeeeee;padding-top:20px;">
+    <div class="row">
+      <div class="container-fluid">
+        <span style="font-size:20px;" >Name : {{contact.contact.name}}</span><br/>
+        <span style="font-size:20px;" >Phone :  {{contact.contact.mobile}}</span><br/>
+        <span style="font-size:20px;" >Email : {{contact.contact.email}}</span><br/>
+        <span style="font-size:20px;" >GSTIN : {{contact.contact.company.gst}}</span><br/>
+      </div>
+    </div>
+    <div class="row">
+          <h1>  Commodity Details </h1>
+      <div class="col-md-7">
+      </div>
+      <div class="col-md-3 text-left">
+        <label> Search</label></br>
+        <input type="text" class="form-control" ng-model='searchText'>
+      </div>
+      <div class="col-md-2 text-left">
+        <label> Export Excel</label></br>
+        <button type="button" class="btn btn-primary" name="button" ng-click="downloadItems()"> <i class="fa fa-download" ></i> </button>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-4">
+        <label>Name</label>
+        <input type="text" class="form-control" ng-model="form.name">
+      </div>
+      <div class="col-md-3">
+        <label>Quantity</label>
+        <input type="number" class="form-control" value="" ng-model="form.qty">
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+              <label>Type</label>
+              <select class="form-control" ng-model="form.type">
+                <option selected value="unit"> Unit</option>
+                <option value="cartan"> Cartan</option>
+                <option value="pieces">Pieces</option>
+                <option value="packages">Packages</option>
+            </select>
+        </div>
+      </div>
+      <div class="col-md-1" style="padding-top:25px">
+        <button type="button" class="btn btn-primary" ng-click="addCommodities()" style="width:70px"> Add </button>
+      </div>
+    </div>
+
+  <div class="row" style="padding:5px;" ng-if="comodities.length>0">
+    <div class="col-md-4">
+      <b>Name</b>
+    </div>
+    <div class="col-md-2">
+      <b>Quantity</b>
+    </div>
+    <div class="col-md-2">
+      <b>Type</b>
+    </div>
+    <div class="col-md-2">
+      <b>View</b>
+    </div>
+    <div class="col-md-2">
+      <b>Delete</b>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card" ng-repeat="c in comodities | filter : searchText" style="padding-bottom:0px; margin-bottom:10px">
+      <div class="card" ng-if="$index!=idx">
+        <div class="row" style="padding:10px; padding-left:20px;"  ng-click="expand(c.pk,$index)" >
+          <div class="col-md-4">
+            {{c.name}}
+          </div>
+          <div class="col-md-2">
+            {{c.qty}}
+          </div>
+          <div class="col-md-2">
+            {{c.typ}}
+          </div>
+          <div class="col-md-2" >
+            <i class="fa fa-plus" ></i>
+          </div>
+          <div class="col-md-2" >
+              <i class="fa fa-trash" ng-click=delete(c.pk,$index);$event.stopPropagation();></i>
+          </div>
+        </div>
+
+      </div>
+      <div class="card"  ng-if="$index==idx " >
+        <div class="row" style="padding:10px; padding-left:20px;"  ng-click="ShowHide()" >
+          <div class="col-md-4">
+            {{c.name}}
+          </div>
+          <div class="col-md-2">
+            {{c.qty}}
+          </div>
+          <div class="col-md-2">
+            {{c.typ}}
+          </div>
+          <div class="col-md-2" >
+              <i class="fa fa-minus"  ></i>
+          </div>
+          <div class="col-md-2" >
+              <i class="fa fa-trash " ng-click=delete(c.pk,$index);$event.stopPropagation();></i>
+          </div>
+        </div>
+
+      </div>
+      <div ng-if="$index==idx">
+        <div class="row" style="padding:20px">
+          <div class="col-md-5">
+            <input type="number" class="form-control" value="" ng-model="commodty.quanty">
+          </div>
+          <div class="col-md-5">
+            <button type="button" class="btn btn-primary" ng-click="checkIn(c.pk,c.qty)" style="width:100px"> In </button>
+            <button type="button" class="btn btn-primary" ng-click="checkOut(c.pk,c.qty)" style="width:100px"> Out </button>
+          </div>
+        </div>
+        <div class="row" ng-if="comodityData.length>0">
+          <div class="row" style="padding-left:55px;">
+            <div class="col-md-4 ">
+              <label>From</label>
+              <div class="input-group" style="width:80%">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="yyyy-MM-dd" ng-model="form.from" is-open="status.open" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="status.open = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label>To</label>
+              <div class="input-group" style="width:80%">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="yyyy-MM-dd" ng-model="form.to" is-open="status.opened" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2 text-right">
+              <label>Download Excel</label> <br>
+              <button type="button"class="btn btn-secondary pull-right" name="button" ng-click="downloadIn(c.pk)"> <i class="fa fa-download"></i></button>
+            </div>
+          </div>
+          <div class="text-center" style="padding:30px;">
+            <table class="table table-bordered" style="width:100%;">
+              <tr>
+                <th class="text-center">Created</th>
+                <th class="text-center">In</th>
+                <th class="text-center">Out</th>
+                <th class="text-center"> Remaining Qt. </th>
+                <th class="text-center">Download</th>
+
+              </tr>
+              <tbody ng-repeat="s in comodityData" >
+                <tr>
+                  <td>{{s.created|date:'d-M-y'}}</td>
+                  <td>{{s.checkIn}}</td>
+                  <td>{{s.checkOut}}</td>
+                  <td>{{s.balance}}</td>
+                  <td>
+                    <!-- <i class="fa fa-download" ng-click="downloadStatus(s.checkIn,s.checkOut,s.pk)"></i> -->
+                    <a ng-if="s.checkIn!=null" href="/api/warehouse/downloadPdfCheckIn/?commPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                    <a ng-if="s.checkOut!=null" href="/api/warehouse/downloadPdfCheckOut/?commPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                  </td>
+
+                    <!-- <a href="/api/warehouse/downloadPdf/"><i class="fa fa-2x fa-download">PDF</i> </a> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
